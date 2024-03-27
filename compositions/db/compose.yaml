@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  db_mysql:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - dbtest
+    # env_file:
+    #   - ../../mysql.env
+    environment:
+      - TZ=Europe/Bratislava
+      - MYSQL_ROOT_PASSWORD=secret
+      # - MYSQL_DATABASE=${DB_DATABASE}
+      # - MYSQL_USER=${DB_USER}
+      # - MYSQL_PASSWORD=${DB_PASSWORD}
+
+  db_postgresql_16:
+    image: postgres:16.1
+    # restart: always
+    volumes:
+      - postgresql16_data:/var/lib/postgresql/data
+    networks:
+      - dbtest
+    environment:
+      - TZ=Europe/Bratislava
+      - POSTGRES_PASSWORD=secret
+
+  db_postgresql_15:
+    image: postgres:15-alpine
+    # restart: always
+    volumes:
+      - postgresql15_data:/var/lib/postgresql/data
+    networks:
+      - dbtest
+    environment:
+      - TZ=Europe/Bratislava
+      - POSTGRES_PASSWORD=secret
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - dbtest
+
+volumes:
+  mysql_data:
+  postgresql16_data:
+  postgresql15_data:
+
+networks:
+  dbtest:

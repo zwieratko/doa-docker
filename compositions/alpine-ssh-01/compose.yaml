@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  alpine-01:
+    image: alpine
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: >
+      sh -c "apk update &&
+             apk upgrade &&
+             apk add openrc iproute2 openssh doas &&
+             ssh-keygen -A &&
+             sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+             adduser rado -D -G wheel &&
+             echo 'rado:heslo' | chpasswd &&
+             echo 'permit :wheel as root' > /etc/doas.d/doas.conf &&
+             rc-status &&
+             touch /run/openrc/softlevel &&
+             rc-service sshd start &&
+             sh"
+    ports:
+      - "127.0.0.1:9022:22"
+    #working_dir: /home
+    volumes:
+      - home-01:/home
+    environment:
+      - var_name=var_value
+
+volumes:
+  home-01:
+
+networks:
+  bridge:

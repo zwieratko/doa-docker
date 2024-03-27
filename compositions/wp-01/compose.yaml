@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - wp_db_data:/var/lib/mysql
+    # networks:
+    #   - wordpress
+    # env_file:
+    #   - ../../mysql.env
+    environment:
+      - TZ=Europe/Bratislava
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    # networks:
+    #   - wordpress
+
+  wp:
+    image: wordpress
+    ports:
+      - "80:80"
+    volumes:
+      - wp_wp_data:/var/www/html
+    # networks:
+    #   - wordpress
+    # env_file:
+    #   - ../../wordpress.env
+    environment:
+      - TZ=Europe/Bratislava
+      - WORDPRESS_DB_HOST=${WP_DB_HOST}
+      - WORDPRESS_DB_USER=${WP_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WP_DB_PASSWORD}
+      - WORDPRESS_DB_NAME=${WP_DB_NAME}
+
+volumes:
+  wp_db_data:
+  wp_wp_data:
+
+# networks:
+#   wordpress:

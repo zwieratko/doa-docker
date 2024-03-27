@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  mdb10:
+    image: mariadb:10
+    volumes:
+      - mdb10_data:/var/lib/mysql
+    networks:
+      - dbtest
+    # env_file:
+    #   - ../../mysql.env
+    environment:
+      - TZ=Europe/Bratislava
+      - MYSQL_ROOT_PASSWORD=top.secret
+      # - MYSQL_DATABASE=${DB_DATABASE}
+      # - MYSQL_USER=${DB_USER}
+      # - MYSQL_PASSWORD=${DB_PASSWORD}
+
+  pg16:
+    image: postgres:16-alpine
+    # restart: always
+    volumes:
+      - pg16_data:/var/lib/postgresql/data
+    networks:
+      - dbtest
+    environment:
+      - TZ=Europe/Bratislava
+      - POSTGRES_PASSWORD=top.secret
+
+  pg15:
+    image: postgres:15-alpine
+    # restart: always
+    volumes:
+      - pg15_data:/var/lib/postgresql/data
+    networks:
+      - dbtest
+    environment:
+      - TZ=Europe/Bratislava
+      - POSTGRES_PASSWORD=top.secret
+
+  adminer:
+    image: adminer
+    ports:
+      - "8081:8080"
+    networks:
+      - dbtest
+
+volumes:
+  mdb10_data:
+  pg16_data:
+  pg15_data:
+
+networks:
+  dbtest:
+
